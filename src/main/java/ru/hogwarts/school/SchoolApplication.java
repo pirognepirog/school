@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition
 public class SchoolApplication {
     // http://localhost:8080/webjars/swagger-ui/index.html - не работает
-    // http://localhost:8080/swagger-ui/index.html
+     // http://localhost:8080/swagger-ui/index.html
 	public static void main(String[] args) {
 
         SpringApplication.run(SchoolApplication.class, args);

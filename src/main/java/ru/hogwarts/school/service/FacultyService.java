@@ -16,7 +16,7 @@ public class FacultyService {
     private final HashMap<Long, Faculty> faculties   = new HashMap<>();
     private long lastId = 0; // идентификатор по умолчанию
 */
-    /// ИНЖЕКТИМ РЕПОЗИТОРИЙ
+    /// ИНЖЕКТИМ  РЕПОЗИТОРИЙ
     private final FacultyRepository facultyRepository;
     ///  конструктор
     public FacultyService(FacultyRepository facultyRepository) {

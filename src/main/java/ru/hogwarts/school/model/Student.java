@@ -11,7 +11,7 @@ import java.util.Objects;
 @Entity /// (этот класс имеет табличное представление в БД)
 public class Student {
 
-    @Id ///  помечаем что это поле ключ
+    @Id ///  помечаем  что это поле ключ
     @GeneratedValue(strategy = GenerationType.IDENTITY) ///  автогенерация ключа
     private Long id;
     private String name;
