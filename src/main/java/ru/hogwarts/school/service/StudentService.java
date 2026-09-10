@@ -39,7 +39,7 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    /// Удаление  Student из карты
+    /// Удаление Student из карты
     public void deleteStudent(long id) {
         studentRepository.deleteById(id);
     }

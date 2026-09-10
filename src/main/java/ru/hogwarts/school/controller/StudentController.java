@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequestMapping("/students") // установка базового URL
 public class StudentController {
 
-    // инжектим класс  StudentService
+    // инжектим класс StudentService
     // @Autowired - лишнее, так как есть конструктор
     private StudentService studentService;
 
