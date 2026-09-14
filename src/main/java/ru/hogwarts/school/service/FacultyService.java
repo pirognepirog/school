@@ -1,4 +1,6 @@
 package ru.hogwarts.school.service;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
@@ -50,9 +52,7 @@ public class FacultyService {
 
     /// Метод фильтрации Faculty по цвету через stream API
     public Collection<Faculty> getFacultiesByColor(String color) {
-        return facultyRepository.findAll().stream()
-                .filter(faculty -> Objects.equals(faculty.getColor(), color))
-                .collect(Collectors.toList());
+        return facultyRepository.getFacultiesByColor(color);
     }
 /* старый код для работы с HashMap
     ///  Получение Faculty из библиотеки
