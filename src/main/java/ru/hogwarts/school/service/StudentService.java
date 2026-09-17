@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
@@ -56,45 +57,32 @@ public class StudentService {
                 .collect(Collectors.toList());
     }
 
-/* старый код
-    /// Создание нового Student
-    public Student createStudent(Student student) {
-        // указываем последний идентификатор
-        student.setId(++lastId); // увеличиваем на 1
-        students.put(lastId, student); // ложим Student в HashMap
-        return student; // возвращаем Student из метода для того, чтобы можно было использовать в другом месте
+    /// ШАГ 3 по заданию
+    public Collection<Student> getStudentsByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
+    }
+    /// Получить всех студентов, но отобразить только список их имен
+    public Collection<String> getAllStudentsNames() {
+        return studentRepository.getAllStudentsNames();
     }
 
-    ///  Получение Student из библиотеки
-    public Student findStudent(long id) {
-        return students.get(id); // возврат значения из HashMap по id
+    /// Получить всех студентов, у которых в имени присутствует буква О (или любая другая).
+    public Collection<String> getAllStudentsLikeNames(String letter) {
+        return studentRepository.getAllStudentsLikeNames(letter);
     }
 
-    /// Редактирование Student
-    public Student editStudent(Student student) {
-        if (students.containsKey(student.getId())) {
-            throw new IllegalArgumentException("Student with id " + student.getId() + " not found");
-        }
-        students.put(student.getId(), student);
-        return student;
+    /// Получить всех студентов, у которых возраст меньше идентификатора.
+    public Collection<Object[]> getStudentNamesAndAgesLessThan(int age) {
+        return studentRepository.getStudentNamesAndAgesLessThan(age);
     }
 
-    /// Удаление Student из карты
-    public Student deleteStudent(long id) {
-        return students.remove(id);
+    /// Получить всех студентов упорядоченных по возрасту.
+    public Collection<Object[]> getStudentSortingByAge() {
+        return studentRepository.getStudentSortingByAge();
     }
 
-    /// Возврат коллекции Student
-    public Collection<Student> getAllStudents() {
-        return students.values();
+    ///  получить студентов на факультете
+    public Collection<Student> getStudentsByFacultyId(Long facultyId) {
+        return studentRepository.findByFacultyId(facultyId);
     }
-
-    /// Метод фильтрации студентов по возрасту через stream API
-    public Collection<Student> getStudentsByAge(int age) {
-        return students.values().stream()
-                .filter(student -> student.getAge() == age)
-                .collect(Collectors.toList());
-    }
-
- */
 }

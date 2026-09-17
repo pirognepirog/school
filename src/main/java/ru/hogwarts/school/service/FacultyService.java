@@ -1,9 +1,9 @@
 package ru.hogwarts.school.service;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.StudentRepository;
 
 
 import java.util.Collection;
@@ -20,9 +20,12 @@ public class FacultyService {
 */
     /// ИНЖЕКТИМ РЕПОЗИТОРИЙ
     private final FacultyRepository facultyRepository;
+    private final StudentRepository studentRepository;
+
     ///  конструктор
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(FacultyRepository facultyRepository, StudentRepository studentRepository) {
         this.facultyRepository = facultyRepository;
+        this.studentRepository = studentRepository;
     }
 
     /// Создание нового Faculty
@@ -54,36 +57,18 @@ public class FacultyService {
     public Collection<Faculty> getFacultiesByColor(String color) {
         return facultyRepository.getFacultiesByColor(color);
     }
-/* старый код для работы с HashMap
-    ///  Получение Faculty из библиотеки
-    public Faculty findFaculty(long id) {
-        return faculties.get(id); // возврат значения из HashMap по id
+
+    /// Метод фильтрации Faculty по имени или цвету без учета регистра
+    public Collection<Faculty> findByNameOrColor(String value) {
+        return facultyRepository.findByNameContainsIgnoreCaseOrColorContainsIgnoreCase(value, value);
     }
 
-    /// Редактирование Faculty
-    public Faculty editFaculty(Faculty faculty) {
-        if (!faculties.containsKey(faculty.getId())) {
-            throw new IllegalArgumentException("Faculty with id " + faculty.getId() + " not found");
+    /// Получить факультет студента
+    public Faculty getFacultyByStudentId(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            return null;
         }
-        faculties.put(faculty.getId(), faculty);
-        return faculty;
+        return student.getFaculty();
     }
-
-    /// Удаление Faculty из карты
-    public Faculty deleteFaculty(long id) {
-        return faculties.remove(id);
-    }
-
-    /// Возврат коллекции Student
-    public Collection<Faculty> getAllFaculties() {
-        return faculties.values();
-    }
-
-    /// Метод фильтрации Faculty по цвету через stream API
-    public Collection<Faculty> getFacultiesByColor(String color) {
-        return faculties.values().stream()
-                .filter(faculty -> Objects.equals(faculty.getColor(), color))
-                .collect(Collectors.toList());
-    }
- */
-}
+ }

@@ -2,6 +2,7 @@ package ru.hogwarts.school.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -87,7 +88,45 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
+    ///  ШАГ 3 по заданию
+    @GetMapping("/age-between")
+    public ResponseEntity<Collection<Student>> getStudentsByAgeBetween(
+            @RequestParam int min,
+            @RequestParam int max) {
+        return ResponseEntity.ok(studentService.getStudentsByAgeBetween(min, max));
+    }
 
+    /// Получить всех студентов, но отобразить только список их имен
+    @GetMapping("/names")
+    public ResponseEntity<Collection<String>> getAllStudentsNames() {
+        return ResponseEntity.ok(studentService.getAllStudentsNames());
+    }
+
+    /// Получить всех студентов, но отобразить только список их имен
+    @GetMapping("/like-names")
+    public ResponseEntity<Collection<String>> getAllStudentsLikeNames(@RequestParam String letter) {
+
+        return ResponseEntity.ok(studentService.getAllStudentsLikeNames(letter));
+    }
+
+    /// Получить всех студентов, у которых возраст меньше идентификатора.
+    @GetMapping("/names-and-ages")
+    public ResponseEntity<Collection<Object[]>> getStudentNamesAndAgesLessThan(@RequestParam int age) {
+
+        return ResponseEntity.ok(studentService.getStudentNamesAndAgesLessThan(age));
+    }
+
+    /// Получить всех студентов упорядоченных по возрасту.
+    @GetMapping("/names-and-ages-order-by")
+    public ResponseEntity<Collection<Object[]>> getStudentSortingByAge() {
+        return ResponseEntity.ok(studentService.getStudentSortingByAge());
+    }
+
+    /// Получить студентов факультета
+    @GetMapping("/by-faculty/{facultyId}")
+    public ResponseEntity<Collection<Student>> getStudentsByFaculty(@PathVariable Long facultyId) {
+        return ResponseEntity.ok(studentService.getStudentsByFacultyId(facultyId));
+    }
 
 
 }
