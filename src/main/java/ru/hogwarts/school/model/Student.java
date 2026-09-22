@@ -1,9 +1,6 @@
 package ru.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
@@ -11,11 +8,16 @@ import java.util.Objects;
 @Entity /// (этот класс имеет табличное представление в БД)
 public class Student {
 
-    @Id ///  помечаем  что это поле ключ
+    @Id ///  помечаем что это поле ключ
     @GeneratedValue(strategy = GenerationType.IDENTITY) ///  автогенерация ключа
     private Long id;
     private String name;
     private int age;
+
+    /// настройка связи ManyToOne
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
 
     public Student() {}
 
@@ -70,5 +72,11 @@ public class Student {
         return Objects.hash(id, name, age);
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
 
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+    }
 }
