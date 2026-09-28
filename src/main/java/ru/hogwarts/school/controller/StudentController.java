@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController // помечаем что это контроллер
 @RequestMapping("/students") // установка базового URL
@@ -128,5 +129,22 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentsByFacultyId(facultyId));
     }
 
+    /// Получить количество студентов.
+    @GetMapping("/count")
+    public ResponseEntity<Long> getCountStudent() {
+        return ResponseEntity.ok(studentService.getCountStudent());
+    }
+
+    /// Получить средний возраст студентов.
+    @GetMapping("/avg-age")
+    public ResponseEntity<Double> getAvgAgeStudent() {
+        return ResponseEntity.ok(studentService.getAvgAgeStudent());
+    }
+
+    /// получить только пять последних студентов
+    @GetMapping("/last-five")
+    public ResponseEntity<List<Student>> getLastFiveStudents() {
+        return ResponseEntity.ok(studentService.getLastFiveStudents());
+    }
 
 }

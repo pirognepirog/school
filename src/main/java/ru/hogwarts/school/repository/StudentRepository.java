@@ -1,11 +1,13 @@
 package ru.hogwarts.school.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.hogwarts.school.model.Student;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
@@ -35,4 +37,17 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     /// метод поиска по факультету
     Collection<Student> findByFacultyId(Long facultyId);
+
+    /// метод подсчета всех студентов
+    @Query("SELECT COUNT(s) FROM Student s")
+    long getCountStudent();
+
+    /// метод средний возраст студентов
+    @Query("SELECT AVG(s.age) FROM Student s")
+    Double getAvgAgeStudent();
+
+    /// получить только пять последних студентов
+    @Query("SELECT s FROM Student s ORDER BY s.id DESC")
+    List<Student> getLastFiveStudents(Pageable pageable);
+
 }

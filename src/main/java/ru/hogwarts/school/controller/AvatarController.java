@@ -3,6 +3,9 @@ package ru.hogwarts.school.controller;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -64,6 +67,18 @@ public class AvatarController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+
+    // метод для пагинации Avatar
+    /// получить список аватаров постранично
+    @GetMapping("/preview-list")
+    public ResponseEntity<Page<Avatar>> getAllAvatars(
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Avatar> avatars = avatarService.getAllAvatars(pageable);
+        return ResponseEntity.ok(avatars);
     }
 
 }

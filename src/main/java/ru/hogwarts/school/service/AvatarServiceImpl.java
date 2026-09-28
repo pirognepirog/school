@@ -1,6 +1,8 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -55,32 +57,37 @@ public class AvatarServiceImpl implements AvatarService {
         avatarRepository.save(avatar);
     }
 
+    @Override
+    public Avatar findAvatar(Long studentId) {
+        return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
+    }
+
+
+    public Page<Avatar> getAllAvatars(Pageable pageable) {
+        return avatarRepository.findAll(pageable);
+    }
+
     private byte[] generateDataForDB(Path filePath) throws IOException {
+        try (InputStream is = Files.newInputStream(filePath);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
-        try(InputStream is = Files.newInputStream(filePath);
-            BufferedInputStream bis = new BufferedInputStream(is, 1024);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-
-                BufferedImage image = ImageIO.read(bis);
-                if (image == null) {
-                    throw new IOException("Не удалось прочитать изображение");
-                }
+            BufferedImage image = ImageIO.read(bis);
+            if (image == null) {
+                throw new IOException("Не удалось прочитать изображение");
+            }
 
             int width = Math.min(image.getWidth(), 100);
             int height = image.getHeight() * width / image.getWidth();
 
             BufferedImage preview = new BufferedImage(width, height, image.getType());
-            Graphics2D graphics2D = preview.createGraphics();
-            graphics2D.drawImage(image, 0, 0, width, height, null);
-            graphics2D.dispose();
+            Graphics2D graphics = preview.createGraphics();
+            graphics.drawImage(image, 0, 0, width, height, null);
+            graphics.dispose();
 
             ImageIO.write(preview, getExtensions(filePath.getFileName().toString()), baos);
             return baos.toByteArray();
-            }
-    }
-    /// метод ищет аватара, если не находит, создает новый
-    public Avatar findAvatar(Long studentId) {
-        return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
+        }
     }
 
     private String getExtensions(String fileName) {

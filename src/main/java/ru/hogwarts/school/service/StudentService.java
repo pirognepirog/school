@@ -1,12 +1,14 @@
 package ru.hogwarts.school.service;
 
 
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,4 +87,22 @@ public class StudentService {
     public Collection<Student> getStudentsByFacultyId(Long facultyId) {
         return studentRepository.findByFacultyId(facultyId);
     }
+
+    ///  получить количество студентов
+    public long getCountStudent() {
+        return studentRepository.getCountStudent();
+    }
+
+    ///  получить средний возраст студентов
+    public double getAvgAgeStudent() {
+        Double avg = studentRepository.getAvgAgeStudent();
+        return avg != null ? avg : 0.0;
+    }
+
+    ///  получить только пять последних студентов
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.getLastFiveStudents(PageRequest.of(0, 5));
+    }
+
+
 }
