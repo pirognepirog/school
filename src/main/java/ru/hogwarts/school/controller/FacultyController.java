@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequestMapping("/faculties") // установка базового URL
 public class FacultyController {
 
-    // инжектим класс  FacultyService
+    // инжектим класс FacultyService
     // @Autowired - лишнее, так как есть конструктор
     private FacultyService facultyService;
 
@@ -52,6 +52,14 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String nameOrColor) {
+        if (nameOrColor != null && !nameOrColor.isBlank()) {
+            return ResponseEntity.ok(facultyService.findByNameOrColor(nameOrColor));
+        }
+        return ResponseEntity.ok(facultyService.getAllFaculties());
+    }
+
     /// Метод для создания новых Faculty
     /// полный URL:
     // POST: http://localhost:8080/faculties
@@ -85,6 +93,16 @@ public class FacultyController {
     public ResponseEntity<Object> deleteFaculty(@PathVariable Long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
+    }
+
+    /// Получить факультет студента
+    @GetMapping("/by-student/{studentId}")
+    public ResponseEntity<Faculty> getFacultyByStudent(@PathVariable Long studentId) {
+        Faculty faculty = facultyService.getFacultyByStudentId(studentId);
+        if (faculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(faculty);
     }
 
 }

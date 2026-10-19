@@ -1,21 +1,25 @@
 package ru.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity /// (этот класс имеет табличное представление в БД)
 public class Faculty {
 
-    @Id ///  помечаем  что это поле ключ
+    @Id ///  помечаем что это поле ключ
     @GeneratedValue(strategy = GenerationType.IDENTITY) ///  автогенерация ключа
     private Long id;
     private String name;
     private String color;
+
+    /// настройка связи
+    @OneToMany(mappedBy = "faculty")
+    @JsonIgnore
+    private List<Student> students;
 
     public Faculty() {}
 
@@ -68,5 +72,13 @@ public class Faculty {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, color);
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }
