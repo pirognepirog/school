@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    //Collection<Student> findAllByContainsIgnoreCase(String name);
-
-    Collection<Student> findByAgeBetween(long min, long max);
 
     ///  ШАГ 3 ЗАДАНИЯ, так потому что не Ultimate версия:
     @Query("SELECT s FROM Student s WHERE s.age BETWEEN :min AND :max")
@@ -50,4 +47,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s FROM Student s ORDER BY s.id DESC")
     List<Student> getLastFiveStudents(Pageable pageable);
 
+    /// Фильтрация по возрасту (для логирования)
+    Collection<Student> findByAge(int age);
 }
