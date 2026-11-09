@@ -105,4 +105,10 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
+    // задание урока 4.5 параллельные стримы
+    @GetMapping("/longest-name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        return ResponseEntity.ok(facultyService.getLongestFacultyName());
+    }
+
 }

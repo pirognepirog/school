@@ -230,5 +230,30 @@ public Collection<Student> getStudentsByAge(int age) {
         return students;
     }
 
+    // задание урока 4.5 параллельные стримы
+    public List<String> getStudentsNamesStartingWithA() {
+        logger.info("Was invoked method for get students names starting with A");
+
+        return studentRepository.findAll().stream()
+                .map(Student::getName)                  // берем только имена
+                .filter(name -> name.startsWith("А") || name.startsWith("A")) // на "А" или "A" (рус/англ)
+                .map(String::toUpperCase)               // в верхний регистр
+                .sorted()                               // сортируем по алфавиту
+                .collect(Collectors.toList());
+    }
+
+    public Double getAverageAgeOfStudents() {
+        logger.info("Was invoked method for get average age of students");
+
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)              // превращаем поток студентов в поток int
+                .average()                              // считаем среднее
+                .orElse(0.0);                           // если студентов нет, вернем 0.0
+    }
+
+
+
+
+
 
 }

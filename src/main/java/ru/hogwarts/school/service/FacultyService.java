@@ -9,6 +9,7 @@ import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 @Service
 public class FacultyService {
@@ -146,5 +147,17 @@ public class FacultyService {
 
         return faculty;
     }
+    // задание урока 4.5 параллельные стримы
+    public String getLongestFacultyName() {
+        logger.info("Was invoked method for get longest faculty name");
+
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)                          // берем названия
+                .max(Comparator.comparingInt(String::length))   // ищем самое длинное
+                .orElse("");                                    // если факультетов нет, пустая строка
+    }
+
+
+
 
  }

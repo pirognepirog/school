@@ -8,6 +8,7 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @RestController // помечаем что это контроллер
 @RequestMapping("/students") // установка базового URL
@@ -146,5 +147,18 @@ public class StudentController {
     public ResponseEntity<List<Student>> getLastFiveStudents() {
         return ResponseEntity.ok(studentService.getLastFiveStudents());
     }
+    // задание урока 4.5 параллельные стримы
+    @GetMapping("/names/starting-with-a")
+    public ResponseEntity<List<String>> getStudentsNamesStartingWithA() {
+        return ResponseEntity.ok(studentService.getStudentsNamesStartingWithA());
+    }
 
+    @GetMapping("/sum")
+    public ResponseEntity<Long> calculateSum() {
+        // Оптимизация: используем IntStream вместо Stream.iterate,
+        // это избавляет от автоупаковки объектов и работает в разы быстрее.
+        long sum = IntStream.rangeClosed(1, 1_000_000).sum();
+
+        return ResponseEntity.ok(sum);
+    }
 }
