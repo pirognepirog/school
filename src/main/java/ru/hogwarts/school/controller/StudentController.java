@@ -6,6 +6,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -161,4 +162,80 @@ public class StudentController {
 
         return ResponseEntity.ok(sum);
     }
+
+    // задание урока 4.6 потоки
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> printParallel() {
+        // Получаем всех студентов. Преобразуем в List для удобного доступа по индексу.
+        List<Student> students = new ArrayList<>(studentService.getAllStudents());
+
+        // Защита на случай, если студентов меньше 6
+        if (students.size() < 6) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 1. Первые два имени в основном потоке
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        // 2. Третий и четвертый в первом параллельном потоке
+        Thread thread1 = new Thread(() -> {
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        });
+
+        // 3. Пятый и шестой во втором параллельном потоке
+        Thread thread2 = new Thread(() -> {
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        });
+
+        // Запускаем потоки
+        thread1.start();
+        thread2.start();
+
+        return ResponseEntity.ok().build();
+    }
+
+    private synchronized void printNameSynchronized(String name) {
+        System.out.println(name);
+        // Небольшая пауза для наглядности блокировки, а то не ясно, есть она или нет
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    // эндпоинт
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Void> printSynchronized() {
+        List<Student> students = new ArrayList<>(studentService.getAllStudents());
+
+        if (students.size() < 6) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 1. Первые два имени в основном потоке
+        printNameSynchronized(students.get(0).getName());
+        printNameSynchronized(students.get(1).getName());
+
+        // 2. Третий и четвертый в параллельном потоке
+        Thread thread1 = new Thread(() -> {
+            printNameSynchronized(students.get(2).getName());
+            printNameSynchronized(students.get(3).getName());
+        });
+
+        // 3. Пятый и шестой в параллельном потоке
+        Thread thread2 = new Thread(() -> {
+            printNameSynchronized(students.get(4).getName());
+            printNameSynchronized(students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        return ResponseEntity.ok().build();
+    }
+
 }
